@@ -7,6 +7,7 @@ import {
   formBodyFor,
   frontendPostForm,
   frontendGet,
+  seedWith,
   PLURALS,
 } from './_helpers.mjs';
 
@@ -121,6 +122,41 @@ test(`${ENTITY}: navigation includes self link with aria-current`, async () => {
   const r = await frontendGet(stack, BASE);
   const html = await r.text();
   assert.match(html, /aria-current="page"/);
+});
+
+test(`${ENTITY}: list view paginates with previous and next navigation`, async () => {
+  await seedWith(stack, ENTITY, {});
+  await seedWith(stack, ENTITY, {});
+  await seedWith(stack, ENTITY, {});
+  const first = await frontendGet(stack, BASE + '?limit=2&offset=0');
+  assert.equal(first.status, 200);
+  const firstHtml = await first.text();
+  assert.match(firstHtml, /rel="next"/);
+  assert.match(firstHtml, /offset=2/);
+  assert.doesNotMatch(firstHtml, /rel="prev"/);
+
+  const second = await frontendGet(stack, BASE + '?limit=2&offset=2');
+  assert.equal(second.status, 200);
+  const secondHtml = await second.text();
+  assert.match(secondHtml, /rel="prev"/);
+});
+
+test(`${ENTITY}: stored javascript: and data: URLs render as inert text, never as links`, async () => {
+  const jsId = await seedWith(stack, ENTITY, { "contentUrl": 'javascript:alert(1)' });
+  const jsHtml = await (await frontendGet(stack, BASE + '/' + jsId)).text();
+  assert.match(jsHtml, /javascript:alert\(1\)/);
+  assert.doesNotMatch(jsHtml, /href="javascript:/i);
+
+  const dataId = await seedWith(stack, ENTITY, { "contentUrl": 'data:text/html,x' });
+  const dataHtml = await (await frontendGet(stack, BASE + '/' + dataId)).text();
+  assert.match(dataHtml, /data:text\/html,x/);
+  assert.doesNotMatch(dataHtml, /href="data:/i);
+});
+
+test(`${ENTITY}: stored http(s) URL renders as a clickable link`, async () => {
+  const id = await seedWith(stack, ENTITY, { "contentUrl": 'https://example.com/profile' });
+  const html = await (await frontendGet(stack, BASE + '/' + id)).text();
+  assert.match(html, /href="https:\/\/example\.com\/profile"/);
 });
 
 void PLURALS;

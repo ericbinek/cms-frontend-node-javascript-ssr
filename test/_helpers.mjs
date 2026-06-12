@@ -170,6 +170,23 @@ export function resetSeedCache() {
   seededIds.clear();
 }
 
+// Seed one fresh entity with chosen field overrides, bypassing the seed cache.
+// Used to plant a hostile field value (e.g. a "javascript:" URL) and check how
+// the frontend renders it back.
+export async function seedWith(stack, entityName, overrides) {
+  const sample = await resolveRefs(stack, SAMPLES[entityName]);
+  const r = await fetch(stack.apiBaseUrl + '/' + PLURALS[entityName], {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...sample, ...overrides }),
+  });
+  if (r.status !== 201) {
+    const text = await r.text();
+    throw new Error('seedWith(' + entityName + ') failed: ' + r.status + ' ' + text);
+  }
+  return (await r.json()).id;
+}
+
 export async function formBodyFor(stack, entityName) {
   const sample = await resolveRefs(stack, SAMPLES[entityName]);
   const sp = new URLSearchParams();

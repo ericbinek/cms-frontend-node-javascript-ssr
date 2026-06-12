@@ -52,6 +52,22 @@ ${extras}
 </tr>`;
   }).join('');
   const empty = '<tr><td colspan="' + (3 + EXTRA_COLS.length) + '"><em>No items.</em></td></tr>';
+  const limit = Math.max(1, parseInt(sp.get('limit') || '20', 10) || 20);
+  const offset = Math.max(0, parseInt(sp.get('offset') || '0', 10) || 0);
+  const pageHref = (nextOffset) => {
+    const q = new URLSearchParams(sp);
+    q.set('offset', String(nextOffset));
+    return BASE + '?' + q.toString();
+  };
+  const prevLink = offset > 0
+    ? `<a href="${escapeHtml(pageHref(Math.max(0, offset - limit)))}" rel="prev">Previous</a>`
+    : '';
+  const nextLink = offset + limit < body.total
+    ? `<a href="${escapeHtml(pageHref(offset + limit))}" rel="next">Next</a>`
+    : '';
+  const pagination = (prevLink || nextLink)
+    ? `<nav aria-label="Pagination">${prevLink}${nextLink}</nav>`
+    : '';
   return {
     status: 200,
     html: layout({
@@ -64,7 +80,8 @@ ${extras}
 <caption>${escapeHtml(ENTITY)} list</caption>
 <thead><tr>${headers}</tr></thead>
 <tbody>${rows || empty}</tbody>
-</table>`,
+</table>
+${pagination}`,
     }),
   };
 }

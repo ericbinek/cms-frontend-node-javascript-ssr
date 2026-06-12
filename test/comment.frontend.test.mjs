@@ -7,6 +7,7 @@ import {
   formBodyFor,
   frontendPostForm,
   frontendGet,
+  seedWith,
   PLURALS,
 } from './_helpers.mjs';
 
@@ -121,6 +122,23 @@ test(`${ENTITY}: navigation includes self link with aria-current`, async () => {
   const r = await frontendGet(stack, BASE);
   const html = await r.text();
   assert.match(html, /aria-current="page"/);
+});
+
+test(`${ENTITY}: list view paginates with previous and next navigation`, async () => {
+  await seedWith(stack, ENTITY, {});
+  await seedWith(stack, ENTITY, {});
+  await seedWith(stack, ENTITY, {});
+  const first = await frontendGet(stack, BASE + '?limit=2&offset=0');
+  assert.equal(first.status, 200);
+  const firstHtml = await first.text();
+  assert.match(firstHtml, /rel="next"/);
+  assert.match(firstHtml, /offset=2/);
+  assert.doesNotMatch(firstHtml, /rel="prev"/);
+
+  const second = await frontendGet(stack, BASE + '?limit=2&offset=2');
+  assert.equal(second.status, 200);
+  const secondHtml = await second.text();
+  assert.match(secondHtml, /rel="prev"/);
 });
 
 void PLURALS;
