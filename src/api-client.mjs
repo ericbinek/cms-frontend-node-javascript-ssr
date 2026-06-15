@@ -18,14 +18,9 @@ export function pluralOf(entity) {
   throw new Error(`Unknown entity for plural lookup: ${entity}`);
 }
 
-async function request(method, path, body, headers = {}) {
+async function request(method, path) {
   const url = new URL(path, API_BASE_URL);
-  const init = { method, headers: { Accept: 'application/json', ...headers } };
-  if (body !== undefined && body !== null) {
-    init.body = JSON.stringify(body);
-    init.headers['Content-Type'] = 'application/json';
-  }
-  const res = await fetch(url, init);
+  const res = await fetch(url, { method, headers: { Accept: 'application/json' } });
   const text = await res.text();
   let parsed = null;
   if (text) {
@@ -47,14 +42,5 @@ export const api = {
   },
   get(entity, id) {
     return request('GET', `/${pluralOf(entity)}/${encodeURIComponent(id)}`);
-  },
-  create(entity, payload) {
-    return request('POST', `/${pluralOf(entity)}`, payload);
-  },
-  update(entity, id, payload) {
-    return request('PUT', `/${pluralOf(entity)}/${encodeURIComponent(id)}`, payload);
-  },
-  remove(entity, id) {
-    return request('DELETE', `/${pluralOf(entity)}/${encodeURIComponent(id)}`);
   },
 };

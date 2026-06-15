@@ -41,7 +41,7 @@ export async function render({ url }) {
       }),
     };
   }
-  const headers = ['Name', 'Created', ...EXTRA_COLS, 'Actions']
+  const headers = ['Name', 'Created', ...EXTRA_COLS]
     .map((h) => `<th scope="col">${escapeHtml(h)}</th>`).join('');
   const rows = body.items.map((item) => {
     const extras = EXTRA_COLS.map((col) => {
@@ -52,10 +52,9 @@ export async function render({ url }) {
 <td><a href="${BASE}/${escapeHtml(item.id)}">${escapeHtml(displayName(item, ENTITY))}</a></td>
 <td><time datetime="${escapeHtml(item.dateCreated || '')}">${escapeHtml(item.dateCreated || '')}</time></td>
 ${extras}
-<td><a href="${BASE}/${escapeHtml(item.id)}/edit">Edit</a> · <a href="${BASE}/${escapeHtml(item.id)}/delete">Delete</a></td>
 </tr>`;
   }).join('');
-  const empty = '<tr><td colspan="' + (3 + EXTRA_COLS.length) + '"><em>No items.</em></td></tr>';
+  const empty = '<tr><td colspan="' + (2 + EXTRA_COLS.length) + '"><em>No items.</em></td></tr>';
   const limit = Math.max(1, parseInt(sp.get('limit') || '20', 10) || 20);
   const offset = Math.max(0, parseInt(sp.get('offset') || '0', 10) || 0);
   const pageHref = (nextOffset) => {
@@ -78,7 +77,6 @@ ${extras}
       title: ENTITY + 's',
       currentEntity: ENTITY,
       body: `
-<p><a href="${BASE}/new">New ${escapeHtml(ENTITY)}</a></p>
 <p>Showing ${body.items.length} of ${body.total}.</p>
 <table>
 <caption>${escapeHtml(ENTITY)} list</caption>

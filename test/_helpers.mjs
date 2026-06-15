@@ -113,17 +113,6 @@ export async function startStack() {
   };
 }
 
-function encodeOne(value) {
-  if (value === null || value === undefined) return '';
-  if (typeof value === 'object') {
-    if (value.__ref) return '__needs_resolve__';
-    if (value['@type'] === 'Language') return String(value.alternateName || '');
-    return JSON.stringify(value);
-  }
-  if (typeof value === 'boolean') return value ? 'true' : 'false';
-  return String(value);
-}
-
 async function resolveRefs(stack, sample) {
   const resolved = {};
   for (const [key, value] of Object.entries(sample)) {
@@ -185,29 +174,6 @@ export async function seedWith(stack, entityName, overrides) {
     throw new Error('seedWith(' + entityName + ') failed: ' + r.status + ' ' + text);
   }
   return (await r.json()).id;
-}
-
-export async function formBodyFor(stack, entityName) {
-  const sample = await resolveRefs(stack, SAMPLES[entityName]);
-  const sp = new URLSearchParams();
-  for (const [key, value] of Object.entries(sample)) {
-    if (Array.isArray(value)) {
-      for (const v of value) sp.append(key, encodeOne(v));
-    } else {
-      sp.append(key, encodeOne(value));
-    }
-  }
-  return sp.toString();
-}
-
-export async function frontendPostForm(stack, path, body) {
-  const r = await fetch(stack.frontendBaseUrl + path, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body,
-    redirect: 'manual',
-  });
-  return r;
 }
 
 export async function frontendGet(stack, path) {

@@ -27,11 +27,7 @@ export async function render({ id }) {
       body: `
 <article>
 <dl>${rows}${meta}</dl>
-<p>
-<a href="${BASE}/${escapeHtml(item.id)}/edit">Edit</a> ·
-<a href="${BASE}/${escapeHtml(item.id)}/delete">Delete</a> ·
-<a href="${BASE}">Back to list</a>
-</p>
+<p><a href="${BASE}">Back to list</a></p>
 </article>`,
     }),
   };
