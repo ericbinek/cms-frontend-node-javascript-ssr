@@ -7,10 +7,16 @@ import * as BlogPostingList from './views/blog-posting/list.mjs';
 import * as BlogPostingDetail from './views/blog-posting/detail.mjs';
 import * as PersonList from './views/person/list.mjs';
 import * as PersonDetail from './views/person/detail.mjs';
+import * as OrganizationList from './views/organization/list.mjs';
+import * as OrganizationDetail from './views/organization/detail.mjs';
 import * as WebPageList from './views/web-page/list.mjs';
 import * as WebPageDetail from './views/web-page/detail.mjs';
 import * as ImageObjectList from './views/image-object/list.mjs';
 import * as ImageObjectDetail from './views/image-object/detail.mjs';
+import * as VideoObjectList from './views/video-object/list.mjs';
+import * as VideoObjectDetail from './views/video-object/detail.mjs';
+import * as AudioObjectList from './views/audio-object/list.mjs';
+import * as AudioObjectDetail from './views/audio-object/detail.mjs';
 import * as CategoryCodeList from './views/category-code/list.mjs';
 import * as CategoryCodeDetail from './views/category-code/detail.mjs';
 import * as CategoryCodeSetList from './views/category-code-set/list.mjs';
@@ -23,6 +29,8 @@ import * as CommentList from './views/comment/list.mjs';
 import * as CommentDetail from './views/comment/detail.mjs';
 import * as WebSiteList from './views/web-site/list.mjs';
 import * as WebSiteDetail from './views/web-site/detail.mjs';
+import * as SiteNavigationElementList from './views/site-navigation-element/list.mjs';
+import * as SiteNavigationElementDetail from './views/site-navigation-element/detail.mjs';
 
 const PORT = parseInt(process.env.PORT || '4000', 10);
 const HOST = process.env.HOST || '0.0.0.0';
@@ -34,10 +42,16 @@ const ENTITY_ROUTES = [
     views: { list: BlogPostingList, detail: BlogPostingDetail } },
   { entity: "Person", plural: "persons",
     views: { list: PersonList, detail: PersonDetail } },
+  { entity: "Organization", plural: "organizations",
+    views: { list: OrganizationList, detail: OrganizationDetail } },
   { entity: "WebPage", plural: "web-pages",
     views: { list: WebPageList, detail: WebPageDetail } },
   { entity: "ImageObject", plural: "image-objects",
     views: { list: ImageObjectList, detail: ImageObjectDetail } },
+  { entity: "VideoObject", plural: "video-objects",
+    views: { list: VideoObjectList, detail: VideoObjectDetail } },
+  { entity: "AudioObject", plural: "audio-objects",
+    views: { list: AudioObjectList, detail: AudioObjectDetail } },
   { entity: "CategoryCode", plural: "category-codes",
     views: { list: CategoryCodeList, detail: CategoryCodeDetail } },
   { entity: "CategoryCodeSet", plural: "category-code-sets",
@@ -50,6 +64,8 @@ const ENTITY_ROUTES = [
     views: { list: CommentList, detail: CommentDetail } },
   { entity: "WebSite", plural: "web-sites",
     views: { list: WebSiteList, detail: WebSiteDetail } },
+  { entity: "SiteNavigationElement", plural: "site-navigation-elements",
+    views: { list: SiteNavigationElementList, detail: SiteNavigationElementDetail } },
 ];
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

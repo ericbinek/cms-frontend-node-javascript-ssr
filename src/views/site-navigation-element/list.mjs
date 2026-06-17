@@ -1,20 +1,14 @@
 import { layout, escapeHtml, displayName, formatValue } from '../layout.mjs';
 import { api } from '../../api-client.mjs';
 
-const ENTITY = "Person";
-const BASE = "/persons";
+const ENTITY = "SiteNavigationElement";
+const BASE = "/site-navigation-elements";
 const PROPERTIES = [
   { name: "name", kind: 'InlineScalar', use: "Text", cardinality: "one", required: true },
-  { name: "givenName", kind: 'InlineScalar', use: "Text", cardinality: "one", required: false },
-  { name: "familyName", kind: 'InlineScalar', use: "Text", cardinality: "one", required: false },
-  { name: "alternateName", kind: 'InlineScalar', use: "Text", cardinality: "one", required: false },
-  { name: "email", kind: 'InlineScalar', use: "Text", cardinality: "one", required: false },
-  { name: "url", kind: 'InlineScalar', use: "URL", cardinality: "one", required: false },
+  { name: "url", kind: 'InlineScalar', use: "URL", cardinality: "one", required: true },
   { name: "description", kind: 'InlineScalar', use: "Text", cardinality: "one", required: false },
-  { name: "image", kind: 'Ref', targets: ["ImageObject"], cardinality: "one", required: false },
-  { name: "worksFor", kind: 'Ref', targets: ["Organization"], cardinality: "one", required: false },
-  { name: "jobTitle", kind: 'InlineScalar', use: "Text", cardinality: "one", required: false },
-  { name: "sameAs", kind: 'InlineScalar', use: "URL", cardinality: "many", required: false },
+  { name: "position", kind: 'InlineScalar', use: "Integer", cardinality: "one", required: false },
+  { name: "isPartOf", kind: 'Ref', targets: ["SiteNavigationElement"], cardinality: "one", required: false },
 ];
 const EXTRA_COLS = ["url"];
 

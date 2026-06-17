@@ -1,20 +1,19 @@
 import { layout, escapeHtml, displayName, formatValue, errorPage } from '../layout.mjs';
 import { api } from '../../api-client.mjs';
 
-const ENTITY = "Person";
-const BASE = "/persons";
+const ENTITY = "Organization";
+const BASE = "/organizations";
 const PROPERTIES = [
   { name: "name", kind: 'InlineScalar', use: "Text", cardinality: "one", required: true },
-  { name: "givenName", kind: 'InlineScalar', use: "Text", cardinality: "one", required: false },
-  { name: "familyName", kind: 'InlineScalar', use: "Text", cardinality: "one", required: false },
-  { name: "alternateName", kind: 'InlineScalar', use: "Text", cardinality: "one", required: false },
-  { name: "email", kind: 'InlineScalar', use: "Text", cardinality: "one", required: false },
-  { name: "url", kind: 'InlineScalar', use: "URL", cardinality: "one", required: false },
+  { name: "legalName", kind: 'InlineScalar', use: "Text", cardinality: "one", required: false },
   { name: "description", kind: 'InlineScalar', use: "Text", cardinality: "one", required: false },
-  { name: "image", kind: 'Ref', targets: ["ImageObject"], cardinality: "one", required: false },
-  { name: "worksFor", kind: 'Ref', targets: ["Organization"], cardinality: "one", required: false },
-  { name: "jobTitle", kind: 'InlineScalar', use: "Text", cardinality: "one", required: false },
+  { name: "url", kind: 'InlineScalar', use: "URL", cardinality: "one", required: false },
+  { name: "email", kind: 'InlineScalar', use: "Text", cardinality: "one", required: false },
+  { name: "telephone", kind: 'InlineScalar', use: "Text", cardinality: "one", required: false },
+  { name: "logo", kind: 'Ref', targets: ["ImageObject"], cardinality: "one", required: false },
+  { name: "foundingDate", kind: 'InlineScalar', use: "Date", cardinality: "one", required: false },
   { name: "sameAs", kind: 'InlineScalar', use: "URL", cardinality: "many", required: false },
+  { name: "parentOrganization", kind: 'Ref', targets: ["Organization"], cardinality: "one", required: false },
 ];
 
 export async function render({ id }) {
